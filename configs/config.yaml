@@ -1,0 +1,26 @@
+# --- Project Configuration ---
+
+# Experiment Name (Used for saving logs and checkpoints)
+experiment_name: "MobileNetV2_Distillation_v1"
+
+# --- Paths ---
+# Adjust these relative to your project root
+data_root: "dataset"
+save_dir: "checkpoints"
+
+# --- Model Hyperparameters ---
+student_backbone: "mobilenet_v2"
+teacher_checkpoint: "checkpoints/teacher_supervised_best.pth"
+
+# --- Training Hyperparameters ---
+img_size: 320          # 320x320 is a sweet spot for RTX 2050
+batch_size: 8          # Lower to 4 if OOM occurs
+epochs: 50
+learning_rate: 1.0e-4  # 0.0001
+num_workers: 4         # Adjust based on CPU cores (usually 4-8)
+seed: 42               # Fixed seed for reproducibility
+
+# --- Knowledge Distillation Settings ---
+# Loss = alpha * GT_Loss + (1 - alpha) * KD_Loss
+alpha: 0.6             # Weight for Ground Truth Loss
+temperature: 4.0       # Softening factor for Teacher logits

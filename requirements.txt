@@ -1,0 +1,28 @@
+# --- PyTorch with CUDA 12.1 Support ---
+# We use the extra-index-url to force pip to look at the NVIDIA wheels first.
+--extra-index-url https://download.pytorch.org/whl/cu121
+
+torch
+torchvision
+torchaudio
+
+# --- Core Data & Image Processing ---
+numpy
+pandas
+opencv-python
+pillow
+albumentations
+
+# --- Model & Training Utilities ---
+segmentation-models-pytorch
+timm
+scikit-learn
+tqdm
+pyyaml
+matplotlib
+
+# --- Web App / Demo ---
+gradio
+
+# --- Optional: Visualization for Report ---
+# grad-cam  # Uncomment if you want heatmaps later

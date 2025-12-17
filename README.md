@@ -4,15 +4,15 @@ A deep learning project for **polyp segmentation** in colonoscopy images using *
 
 ## Table of Contents
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Usage](#-usage)
-- [Training Modes](#-training-modes)
-- [Model Architecture](#-model-architecture)
-- [Dataset](#-dataset)
-- [Results](#-results)
+- [Overview](#Overview)
+- [Features](#Features)
+- [Project Structure](#Project-structure)
+- [Installation](#Installation)
+- [Usage](#Usage)
+- [Training Modes](#Training-modes)
+- [Model Architecture](#Model-architecture)
+- [Dataset](#Dataset)
+- [Results](#Results)
 
 ## Overview
 

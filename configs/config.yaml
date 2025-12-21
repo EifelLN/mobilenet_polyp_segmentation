@@ -10,7 +10,7 @@ save_dir: "checkpoints"
 
 # --- Model Hyperparameters ---
 student_backbone: "mobilenet_v2"
-teacher_checkpoint: "checkpoints/teacher_supervised_best.pth"
+teacher_checkpoint: "checkpoints/Best_ResNetTeacher.pth"
 
 # --- Training Hyperparameters ---
 img_size: 320          # 320x320 is a sweet spot for RTX 2050

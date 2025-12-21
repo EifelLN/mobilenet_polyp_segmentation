@@ -5,11 +5,11 @@ This script provides a unified interface to:
 - Train models (baseline, distillation, teacher)
 - Evaluate models on test datasets
 - Plot training history from checkpoint JSON files
-- Run the Gradio demo app
+- Run the Streamlit demo app
 
 Usage:
-    python main.py                           # Default: Launch Gradio app
-    python main.py app                       # Launch Gradio app
+    python main.py                           # Default: Launch Streamlit app
+    python main.py app                       # Launch Streamlit app
     python main.py train --mode distillation # Train with knowledge distillation
     python main.py train --mode baseline     # Train baseline model
     python main.py train --mode teacher      # Train teacher model
@@ -23,21 +23,27 @@ import os
 
 
 def run_app(args):
-    """Launch the Gradio demo application."""
-    print("Launching Gradio App...")
+    """Launch the Streamlit demo application."""
+    import subprocess
+    import sys
     
-    # Import and run app
-    from app import demo, MODEL_PATH, DEVICE
+    print("Launching Streamlit App...")
+    print(f"Device: {args.device if hasattr(args, 'device') else 'auto'}")
     
-    print(f"Model: {MODEL_PATH}")
-    print(f"Device: {DEVICE}")
+    # Build streamlit command
+    app_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'app.py')
     
-    demo.launch(
-        server_name=args.host,
-        server_port=args.port,
-        share=args.share,
-        show_error=True
-    )
+    cmd = [
+        sys.executable, "-m", "streamlit", "run", app_path,
+        "--server.address", args.host,
+        "--server.port", str(args.port),
+    ]
+    
+    if args.headless:
+        cmd.extend(["--server.headless", "true"])
+    
+    print(f"Running: {' '.join(cmd)}")
+    subprocess.run(cmd)
 
 
 def run_train(args):
@@ -249,9 +255,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  python main.py                                    # Launch Gradio app (default)
-  python main.py app                                # Launch Gradio app
-  python main.py app --share                        # Launch with public URL
+  python main.py                                    # Launch Streamlit app (default)
+  python main.py app                                # Launch Streamlit app
+  python main.py app --headless                     # Launch without auto-opening browser
   python main.py train --mode distillation          # Train with KD
   python main.py train --mode baseline              # Train baseline
   python main.py train --mode teacher               # Train teacher
@@ -265,10 +271,10 @@ Examples:
     subparsers = parser.add_subparsers(dest='command', help='Available commands')
     
     # ===== App subparser =====
-    app_parser = subparsers.add_parser('app', help='Launch Gradio demo application')
-    app_parser.add_argument('--host', type=str, default='127.0.0.1', help='Server host (default: 127.0.0.1)')
-    app_parser.add_argument('--port', type=int, default=7860, help='Server port (default: 7860)')
-    app_parser.add_argument('--share', action='store_true', help='Create public Gradio link')
+    app_parser = subparsers.add_parser('app', help='Launch Streamlit demo application')
+    app_parser.add_argument('--host', type=str, default='localhost', help='Server host (default: localhost)')
+    app_parser.add_argument('--port', type=int, default=8501, help='Server port (default: 8501)')
+    app_parser.add_argument('--headless', action='store_true', help='Run in headless mode (no browser auto-open)')
     
     # ===== Train subparser =====
     train_parser = subparsers.add_parser('train', help='Train polyp segmentation models')
@@ -334,9 +340,9 @@ Examples:
     if args.command is None:
         # Create default args for app
         args.command = 'app'
-        args.host = '127.0.0.1'
-        args.port = 7860
-        args.share = False
+        args.host = 'localhost'
+        args.port = 8501
+        args.headless = False
     
     # Execute the appropriate command
     if args.command == 'app':

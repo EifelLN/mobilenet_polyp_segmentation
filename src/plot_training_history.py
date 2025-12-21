@@ -55,7 +55,15 @@ def plot_training_comparison(histories, save_path='results/training_comparison.p
             color_idx += 1
         
         epochs = hist['epochs']
-        train_loss = hist['train_loss']
+        # For Distillation, use supervised loss for fair comparison with other models
+        if 'train_loss_sup' in hist:
+            train_loss = hist['train_loss_sup']
+        elif 'train_loss' in hist:
+            train_loss = hist['train_loss']
+        elif 'train_loss_total' in hist:
+            train_loss = hist['train_loss_total']
+        else:
+            train_loss = [0] * len(epochs)
         ax1.plot(epochs, train_loss, label=model_name, color=color, linewidth=2)
     
     ax1.set_xlabel('Epoch', fontsize=12)
@@ -148,7 +156,16 @@ def print_summary(histories):
     
     for hist in histories:
         model_name = hist.get('model_name', 'Unknown')
-        final_loss = hist['train_loss'][-1] if hist['train_loss'] else 0
+        # Handle different loss key names
+        if 'train_loss_sup' in hist:
+            loss_data = hist['train_loss_sup']
+        elif 'train_loss' in hist:
+            loss_data = hist['train_loss']
+        elif 'train_loss_total' in hist:
+            loss_data = hist['train_loss_total']
+        else:
+            loss_data = [0]
+        final_loss = loss_data[-1] if loss_data else 0
         best_dice = max(hist['val_dice']) if hist['val_dice'] else 0
         best_iou = max(hist['val_iou']) if hist['val_iou'] else 0
         

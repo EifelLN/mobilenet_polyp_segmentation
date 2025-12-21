@@ -43,7 +43,9 @@ def get_transforms(img_size, mode="train"):
 
 def train_one_epoch(student, teacher, loader, optimizer, loss_fn_sup, loss_fn_kd, scaler, device, config):
     student.train()
-    losses = AverageMeter()
+    total_losses = AverageMeter()
+    sup_losses = AverageMeter()
+    kd_losses = AverageMeter()
     pbar = tqdm(loader, desc="Training", leave=False)
     
     for images, masks in pbar:
@@ -70,10 +72,12 @@ def train_one_epoch(student, teacher, loader, optimizer, loss_fn_sup, loss_fn_kd
         optimizer.step()
         
         if not torch.isnan(total_loss):
-            losses.update(total_loss.item(), images.size(0))
-            pbar.set_postfix({"Loss": f"{losses.avg:.4f}"})
+            total_losses.update(total_loss.item(), images.size(0))
+            sup_losses.update(loss_sup.item(), images.size(0))
+            kd_losses.update(loss_kd.item(), images.size(0))
+            pbar.set_postfix({"Loss": f"{total_losses.avg:.4f}", "Sup": f"{sup_losses.avg:.4f}"})
         
-    return losses.avg
+    return total_losses.avg, sup_losses.avg, kd_losses.avg
 
 def validate(student, loader, device):
     student.eval()
@@ -149,6 +153,8 @@ def main():
         'model_name': 'Distillation',
         'epochs': [],
         'train_loss': [],
+        'train_loss_sup': [],
+        'train_loss_kd': [],
         'val_dice': [],
         'val_iou': []
     }
@@ -157,18 +163,20 @@ def main():
         print(f"\nEpoch [{epoch+1}/{config['epochs']}]")
         
         # Train
-        train_loss = train_one_epoch(
+        train_loss, train_loss_sup, train_loss_kd = train_one_epoch(
             student, teacher, train_loader, optimizer, loss_fn_sup, loss_fn_kd, scaler, device, config
         )
         
         # Validate
         val_dice, val_iou = validate(student, val_loader, device)
         
-        print(f"Loss: {train_loss:.4f} | Val Dice: {val_dice:.4f} | Val IoU: {val_iou:.4f}")
+        print(f"Loss: {train_loss:.4f} (Sup: {train_loss_sup:.4f}, KD: {train_loss_kd:.4f}) | Val Dice: {val_dice:.4f} | Val IoU: {val_iou:.4f}")
         
         # Save to history
         history['epochs'].append(epoch + 1)
         history['train_loss'].append(train_loss)
+        history['train_loss_sup'].append(train_loss_sup)
+        history['train_loss_kd'].append(train_loss_kd)
         history['val_dice'].append(val_dice)
         history['val_iou'].append(val_iou)
         

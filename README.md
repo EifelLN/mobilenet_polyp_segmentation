@@ -23,21 +23,21 @@ Polyps are abnormal growths on the inner lining of the colon that can potentiall
 - **Knowledge Distillation**: Transfer knowledge from a large teacher model to a compact student model
 - **Lightweight Architecture**: MobileNetV2 backbone for real-time inference
 - **High Accuracy**: Achieves competitive Dice scores on standard polyp benchmarks
-- **Easy Deployment**: Includes Gradio web interface for easy demo and testing
+- **Easy Deployment**: Includes Streamlit web interface for easy demo and testing
 
 ## Features
 
 - **Three Training Modes**: Baseline, Knowledge Distillation, and Teacher training
 - **Comprehensive Evaluation**: Test on 5 public polyp datasets
 - **Visual Results**: Save prediction visualizations
-- **Web Demo**: Interactive Gradio application
+- **Web Demo**: Interactive Streamlit application with model comparison
 - **Fast Inference**: Optimized for real-time segmentation
 
 ## Project Structure
 
 ```
 ├── main.py                 # Unified entry point (train/eval/app)
-├── app.py                  # Gradio web application
+├── app.py                  # Streamlit web application
 ├── requirements.txt        # Python dependencies
 ├── configs/
 │   └── config.yaml         # Training configuration
@@ -99,11 +99,14 @@ The project uses a unified `main.py` entry point for all operations.
 ### Quick Start
 
 ```bash
-# Launch Gradio demo (default)
+# Launch Streamlit demo (default)
 python main.py
 
 # Or explicitly
 python main.py app
+
+# Or run directly with Streamlit
+streamlit run app.py
 ```
 
 ### Training
@@ -148,17 +151,20 @@ python main.py plot --history_files checkpoints/Best_Baseline_history.json check
 python main.py plot --checkpoints_dir my_checkpoints
 ```
 
-### Gradio App
+### Streamlit App
 
 ```bash
-# Launch on default port (7860)
+# Launch on default port (8501)
 python main.py app
 
-# Launch with public URL (shareable)
-python main.py app --share
+# Launch in headless mode (no auto-open browser)
+python main.py app --headless
 
 # Custom host and port
-python main.py app --host 127.0.0.1 --port 8080
+python main.py app --host localhost --port 8080
+
+# Or run directly
+streamlit run app.py
 ```
 
 ## Training Modes
@@ -233,24 +239,32 @@ dataset/
 | Student (Baseline) | 0.8774 | 0.8810       | 0.6867      | 0.8500  | 0.6157 | 0.7822   |
 | Student (KD)       | 0.8917 | 0.8915       | 0.6854      | 0.8380  | 0.6427 | 0.7898   |
 
-## Gradio Demo
+## Streamlit Demo
 
-The project includes an interactive web demo built with Gradio.
+The project includes an interactive web demo built with Streamlit.
 
 ### Features
 - Upload colonoscopy images
 - Real-time polyp segmentation
+- Model comparison mode (compare Knowledge Distillation vs Baseline models)
 - Visualization with overlay and contours
 - Example images from test datasets
+- Polyp area percentage calculation
+
+### Available Models
+- **Best_kd.pth**: Student model trained with Knowledge Distillation
+- **Best_Baseline.pth**: Student model trained without teacher guidance
 
 ### Screenshots
 
 Launch the demo:
 ```bash
 python main.py app
+# Or
+streamlit run app.py
 ```
 
-Then open `http://localhost:7860` in your browser.
+Then open `http://localhost:8501` in your browser.
 
 ## Configuration
 
@@ -285,7 +299,7 @@ Main dependencies:
 - `torch >= 2.0`
 - `segmentation-models-pytorch`
 - `albumentations`
-- `gradio`
+- `streamlit`
 - `opencv-python`
 - `pyyaml`
 - `tqdm`

@@ -211,12 +211,17 @@ def train_baseline(config, device):
             save_path = os.path.join(config['save_dir'], f"{exp_name}_best.pth")
             torch.save(student.state_dict(), save_path)
             print(f"--> Best Baseline Saved! (Dice: {best_dice:.4f})")
+            # Save training history alongside best model
+            history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
+            with open(history_path, 'w') as f:
+                json.dump(history, f, indent=4)
+            print(f"Training history saved to {history_path}")
 
-    # Save training history
+    # Save final training history
     history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=4)
-    print(f"Training history saved to {history_path}")
+    print(f"Final training history saved to {history_path}")
     print("Baseline Training Complete.")
 
 
@@ -268,12 +273,17 @@ def train_distillation(config, device):
             save_path = os.path.join(config['save_dir'], f"{exp_name}_best.pth")
             torch.save(student.state_dict(), save_path)
             print(f"--> Best Model Saved! (Dice: {best_dice:.4f})")
+            # Save training history alongside best model
+            history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
+            with open(history_path, 'w') as f:
+                json.dump(history, f, indent=4)
+            print(f"Training history saved to {history_path}")
 
-    # Save training history
+    # Save final training history
     history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=4)
-    print(f"Training history saved to {history_path}")
+    print(f"Final training history saved to {history_path}")
     print("Distillation Training Complete.")
 
 
@@ -319,12 +329,17 @@ def train_teacher(config, device):
             save_path = os.path.join(config['save_dir'], f"{exp_name}_best.pth")
             torch.save(teacher.state_dict(), save_path)
             print(f"--> Best Teacher Saved! (Dice: {best_dice:.4f})")
+            # Save training history alongside best model
+            history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
+            with open(history_path, 'w') as f:
+                json.dump(history, f, indent=4)
+            print(f"Training history saved to {history_path}")
 
-    # Save training history
+    # Save final training history
     history_path = os.path.join(config['save_dir'], f"{exp_name}_history.json")
     with open(history_path, 'w') as f:
         json.dump(history, f, indent=4)
-    print(f"Training history saved to {history_path}")
+    print(f"Final training history saved to {history_path}")
     print("Teacher Training Complete.")
 
 

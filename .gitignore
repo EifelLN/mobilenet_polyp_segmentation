@@ -102,6 +102,7 @@ dataset/
 # Model checkpoints (large files)
 checkpoints/*.pth
 checkpoints/*.pt
+checkpoints/*.json
 
 # Results and outputs
 results/visuals/

@@ -100,7 +100,7 @@ Thumbs.db
 dataset/
 
 # Model checkpoints (large files)
-checkpoints/*.pth
+checkpoints/Best_ResNetTeacher.pth
 checkpoints/*.pt
 checkpoints/*.json
 
